@@ -26,6 +26,8 @@
     
   <%= paginate @repositories, params: { search: params[:search] } %>
   <% else %>
-    <h3 style="text-align:center"> No results found </h3>
+    <% if params[:search].present? %>
+      <h3 style="text-align:center">No results found</h3>
+    <% end %>
   <% end %>
 </div>

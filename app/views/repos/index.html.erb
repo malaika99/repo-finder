@@ -1,0 +1,31 @@
+<h1 class="page-title">GitHub Repository Search</h1>
+<%= form_tag(repos_path, method: :get) do %>
+  <%= text_field_tag(:search, params[:search], placeholder: "Search GitHub repositories", class: "search-input") %>
+  <%= submit_tag("Search", class: "search-button") %>
+<% end %>
+<div id="results">
+  <% if @repositories.present? %>
+  <table class="repository-table">
+    <thead>
+      <tr>
+        <th class="table-header">Name</th>
+        <th class="table-header">Description</th>
+        <th class="table-header">Link</th>
+      </tr>
+    </thead>
+    <tbody id="repo-list">
+      <% @repositories.each do |repo| %>
+        <tr class="table-row">
+          <td class="table-cell"><%= repo['name'] %></td>
+          <td class="table-cell"><%= repo['description'] %></td>
+          <td class="table-cell"><a href="<%= repo['html_url'] %>" class="repo-link"><%= repo['html_url'] %></a></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+    
+  <%= paginate @repositories, params: { search: params[:search] } %>
+  <% else %>
+    <h3 style="text-align:center"> No results found </h3>
+  <% end %>
+</div>

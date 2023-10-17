@@ -1,10 +1,9 @@
 <h1 class="page-title">GitHub Repository Search</h1>
-<%= form_tag(repos_path, method: :get) do %>
-  <%= text_field_tag(:search, params[:search], placeholder: "Search GitHub repositories", class: "search-input") %>
-  <%= submit_tag("Search", class: "search-button") %>
+<%= form_with url: repos_path, method: :get do |form| %>
+  <%= form.text_field :q, value: params[:q], placeholder: "Search", class: "search-input" %>
+  <%= form.submit "Search", class: "search-button" %>
 <% end %>
 <div id="results">
-  <% if @repositories.present? %>
   <table class="repository-table">
     <thead>
       <tr>
@@ -14,20 +13,20 @@
       </tr>
     </thead>
     <tbody id="repo-list">
-      <% @repositories.each do |repo| %>
+      <% @repos.each do |repo| %>
         <tr class="table-row">
           <td class="table-cell"><%= repo['name'] %></td>
           <td class="table-cell"><%= repo['description'] %></td>
           <td class="table-cell"><a href="<%= repo['html_url'] %>" class="repo-link"><%= repo['html_url'] %></a></td>
         </tr>
+      <% end.presence || begin %>
+        <tr>
+          <td colspan="3" style="text-align: center; padding: 1rem">No results found</td>
+        </tr>
       <% end %>
     </tbody>
   </table>
     
-  <%= paginate @repositories, params: { search: params[:search] } %>
-  <% else %>
-    <% if params[:search].present? %>
-      <h3 style="text-align:center">No results found</h3>
-    <% end %>
-  <% end %>
+  <%= paginate @repos %>
+  
 </div>
